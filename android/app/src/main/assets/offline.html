@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+html,body{margin:0;height:100%}
+body{font-family:system-ui,-apple-system,Roboto,sans-serif;background:#131A2E;color:#E8ECF4;display:grid;place-items:center;text-align:center;padding:24px;box-sizing:border-box}
+h1{font-size:22px;margin:18px 0 6px;letter-spacing:-.01em}
+p{color:#9AA3B8;font-size:14px;margin:0 auto 24px;max-width:30ch;line-height:1.5}
+button{border:0;background:#FFB21E;color:#131A2E;font-weight:800;font-size:15px;padding:12px 28px;border-radius:12px}
+svg{width:64px;height:64px}
+</style>
+</head>
+<body>
+<div>
+  <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="#1E2A55"/><path d="M7 24C15 23.5 21 19 25 8" stroke="#FFB21E" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-dasharray="3 3"/><circle cx="25" cy="8" r="2.8" fill="#fff"/></svg>
+  <h1>Tidak bisa terhubung</h1>
+  <p>Z-Productivity butuh internet untuk mengambil data. Periksa koneksi lalu coba lagi.</p>
+  <button onclick="window.ZApp&&ZApp.retry()">Coba lagi</button>
+</div>
+</body>
+</html>

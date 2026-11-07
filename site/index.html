@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Z-Productivity</title>
+<meta name="description" content="Z-Productivity: kelola Daily Work dan Daily Home dari goal jangka panjang sampai task harian. Work 1% daily.">
+<meta name="theme-color" content="#131A2E">
+<meta property="og:title" content="Z-Productivity">
+<meta property="og:description" content="Work 1% daily. Dari goal jangka panjang sampai task harian.">
+<meta property="og:image" content="icons/icon-512.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icons/favicon-48.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Z-Productivity">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;800&display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;height:100%;background:#131A2E;overflow:hidden}
+body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+#app{position:fixed;inset:0;width:100%;height:100%;height:100dvh;border:0;display:block;background:#131A2E}
+.zl{position:fixed;inset:0;z-index:10;display:grid;place-items:center;color:#E8ECF4;background:radial-gradient(120% 80% at 50% 100%,#1E2A55 0%,#131A2E 62%);transition:opacity .55s ease,visibility .55s}
+.zl.out{opacity:0;visibility:hidden}
+.box{display:flex;flex-direction:column;align-items:center;text-align:center;padding:24px}
+.chart{width:min(74vw,300px);height:auto;overflow:visible}
+.axis{stroke:rgba(255,255,255,.12);stroke-width:1}
+.curve{fill:none;stroke:#FFB21E;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 6px rgba(255,178,30,.55))}
+.dot{fill:#fff;filter:drop-shadow(0 0 8px #FFB21E)}
+.held .dot{animation:p 1.3s ease-in-out infinite}
+@keyframes p{50%{r:8px;opacity:.75}}
+.word{font-weight:800;font-size:28px;letter-spacing:-.02em;margin-top:26px}
+.calc{font-variant-numeric:tabular-nums;font-size:15px;color:#9AA3B8;margin-top:4px}
+.calc sup{font-size:10px}
+.calc b{color:#FFB21E;font-weight:700}
+.tag{margin-top:22px;font-size:12px;color:#66708A;letter-spacing:.02em}
+.slow{margin-top:22px;font-size:13px;color:#9AA3B8;display:none}
+.slow.show{display:block}
+.slow button{margin-top:10px;border:0;background:#FFB21E;color:#131A2E;font:inherit;font-weight:800;padding:10px 22px;border-radius:12px;cursor:pointer}
+@media (prefers-reduced-motion:reduce){.held .dot{animation:none}}
+</style>
+</head>
+<body>
+<div class="zl" id="zl" role="status" aria-label="Memuat Z-Productivity">
+  <div class="box" id="box">
+    <svg class="chart" viewBox="0 0 260 150" aria-hidden="true">
+      <line x1="12" y1="138" x2="248" y2="138" class="axis"/>
+      <line x1="12" y1="14" x2="12" y2="138" class="axis"/>
+      <path id="P" class="curve" d="M12,138"/>
+      <circle id="D" class="dot" r="5" cx="12" cy="138"/>
+    </svg>
+    <div class="word">Z-Productivity</div>
+    <div class="calc">1,01<sup id="DY">1</sup> = <b id="V">1,01</b></div>
+    <div class="tag">Work 1% daily</div>
+    <div class="slow" id="slow">Koneksi sedang lambat.<br><button type="button" onclick="location.reload()">Muat ulang</button></div>
+  </div>
+</div>
+<iframe id="app" title="Z-Productivity" allow="clipboard-write"></iframe>
+<script>
+(function () {
+  var WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxwsxIZZzC1twc0gBy6GzD5v-7XH3UvuCHN19kWCahZhGoUBr4zd1vVPc2OrNv4pOfP/exec';
+  var MIN_MS = 2600;
+  var P = document.getElementById('P'), D = document.getElementById('D'), DY = document.getElementById('DY'), V = document.getElementById('V');
+  var MAX = Math.pow(1.01, 365), X0 = 12, X1 = 248, Y0 = 138, Y1 = 14;
+  function pt(d) { return [X0 + (X1 - X0) * (d - 1) / 364, Y0 - (Y0 - Y1) * (Math.pow(1.01, d) - 1) / (MAX - 1)]; }
+  function draw(day) {
+    var s = 'M' + X0 + ',' + Y0;
+    for (var i = 4; i < day; i += 4) { var q = pt(i); s += ' L' + q[0].toFixed(1) + ',' + q[1].toFixed(1); }
+    var p = pt(day); s += ' L' + p[0].toFixed(1) + ',' + p[1].toFixed(1);
+    P.setAttribute('d', s); D.setAttribute('cx', p[0].toFixed(1)); D.setAttribute('cy', p[1].toFixed(1));
+    DY.textContent = day; V.textContent = Math.pow(1.01, day).toFixed(2).replace('.', ',');
+  }
+  function finish() { draw(365); document.getElementById('box').classList.add('held'); }
+  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) finish();
+  else {
+    var t0 = null, dur = 2300;
+    var ease = function (t) { return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; };
+    requestAnimationFrame(function f(now) {
+      if (t0 === null) t0 = now;
+      var t = Math.min(1, (now - t0) / dur);
+      draw(Math.max(1, Math.round(1 + 364 * ease(t))));
+      if (t < 1) requestAnimationFrame(f); else finish();
+    });
+  }
+
+  var zl = document.getElementById('zl'), frame = document.getElementById('app');
+  if (WEB_APP_URL.indexOf('script.google.com') < 0) {
+    var s = document.getElementById('slow');
+    s.innerHTML = 'URL Web App belum diatur. Isi repository variable WEB_APP_URL lalu jalankan ulang workflow.';
+    s.classList.add('show');
+    return;
+  }
+  var loaded = false, minDone = false;
+  function maybeHide() { if (loaded && minDone) { zl.classList.add('out'); setTimeout(function () { zl.remove(); }, 650); } }
+  setTimeout(function () { minDone = true; maybeHide(); }, MIN_MS);
+  setTimeout(function () { if (!loaded) document.getElementById('slow').classList.add('show'); }, 15000);
+  frame.addEventListener('load', function () { loaded = true; setTimeout(maybeHide, 700); });
+  frame.src = WEB_APP_URL + (WEB_APP_URL.indexOf('?') < 0 ? '?' : '&') + 'embed=1';
+})();
+</script>
+</body>
+</html>
