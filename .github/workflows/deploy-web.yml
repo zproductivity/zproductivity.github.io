@@ -1,0 +1,40 @@
+name: Deploy web Z-Productivity
+
+on:
+  push:
+    branches: [ main ]
+    paths: [ 'site/**', '.github/workflows/deploy-web.yml' ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Ganti URL Web App jika variable WEB_APP_URL diisi
+        env:
+          WEB_APP_URL: ${{ vars.WEB_APP_URL }}
+        run: |
+          if [ -n "$WEB_APP_URL" ]; then
+            sed -i "s#https://script.google.com/macros/s/[^']*/exec#${WEB_APP_URL}#g" site/index.html
+          fi
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - id: deployment
+        uses: actions/deploy-pages@v4
