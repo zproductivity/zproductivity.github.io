@@ -61,7 +61,8 @@ body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,Roboto,sans-serif;-
 <script>
 (function () {
   var WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxwsxIZZzC1twc0gBy6GzD5v-7XH3UvuCHN19kWCahZhGoUBr4zd1vVPc2OrNv4pOfP/exec';
-  var MIN_MS = 2600;
+  var IN_APP = /ZProductivityApp/.test(navigator.userAgent);
+  var MIN_MS = IN_APP ? 0 : 2600;
   var P = document.getElementById('P'), D = document.getElementById('D'), DY = document.getElementById('DY'), V = document.getElementById('V');
   var MAX = Math.pow(1.01, 365), X0 = 12, X1 = 248, Y0 = 138, Y1 = 14;
   function pt(d) { return [X0 + (X1 - X0) * (d - 1) / 364, Y0 - (Y0 - Y1) * (Math.pow(1.01, d) - 1) / (MAX - 1)]; }
@@ -73,7 +74,7 @@ body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,Roboto,sans-serif;-
     DY.textContent = day; V.textContent = Math.pow(1.01, day).toFixed(2).replace('.', ',');
   }
   function finish() { draw(365); document.getElementById('box').classList.add('held'); }
-  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) finish();
+  if (IN_APP || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) finish();
   else {
     var t0 = null, dur = 2300;
     var ease = function (t) { return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; };

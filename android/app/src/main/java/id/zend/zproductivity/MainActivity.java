@@ -23,7 +23,7 @@ import android.widget.FrameLayout;
 /**
  * Z-Productivity — pembungkus WebView untuk Web App Google Apps Script.
  * Lapisan atas: loader animasi 1,01^365 (assets/loading.html).
- * Lapisan bawah: Web App. Loader memudar setelah halaman siap dan animasi selesai.
+ * Lapisan bawah: halaman zproductivity.github.io yang memuat Web App. Loader memudar setelah halaman siap dan animasi selesai.
  */
 public class MainActivity extends Activity {
 
@@ -56,7 +56,7 @@ public class MainActivity extends Activity {
         s.setJavaScriptEnabled(true);
         s.setDomStorageEnabled(true);
         s.setDatabaseEnabled(true);
-        s.setLoadWithOverviewMode(true);
+        s.setLoadWithOverviewMode(false);
         s.setUseWideViewPort(true);
         s.setSupportZoom(false);
         s.setUserAgentString(s.getUserAgentString() + " ZProductivityApp/1.0");
@@ -71,7 +71,7 @@ public class MainActivity extends Activity {
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                 Uri uri = request.getUrl();
                 String host = uri.getHost() == null ? "" : uri.getHost();
-                if (host.endsWith("google.com") || host.endsWith("googleusercontent.com")
+                if (host.endsWith("github.io") || host.endsWith("google.com") || host.endsWith("googleusercontent.com")
                         || host.endsWith("gstatic.com") || host.endsWith("googleapis.com")) {
                     return false;
                 }

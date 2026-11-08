@@ -2,11 +2,10 @@ plugins {
     id 'com.android.application'
 }
 
-// URL Web App Apps Script. Diisi dari GitHub repository variable WEB_APP_URL,
-// atau ganti nilai default di bawah ini.
-def webAppUrl = (project.findProperty('WEB_APP_URL') ?: '').toString().trim()
-if (!webAppUrl) {
-    webAppUrl = 'https://script.google.com/macros/s/AKfycbxwsxIZZzC1twc0gBy6GzD5v-7XH3UvuCHN19kWCahZhGoUBr4zd1vVPc2OrNv4pOfP/exec'
+// Halaman yang dibuka APK: pembungkus di GitHub Pages (tanpa banner Google, ukuran layar pas).
+def appUrl = (project.findProperty('APP_URL') ?: '').toString().trim()
+if (!appUrl) {
+    appUrl = 'https://zproductivity.github.io/'
 }
 
 android {
@@ -17,9 +16,9 @@ android {
         applicationId 'id.zend.zproductivity'
         minSdk 26
         targetSdk 34
-        versionCode 1
-        versionName '1.0.0'
-        buildConfigField 'String', 'WEB_APP_URL', "\"${webAppUrl}\""
+        versionCode 2
+        versionName '1.0.2'
+        buildConfigField 'String', 'WEB_APP_URL', "\"${appUrl}\""
     }
 
     buildFeatures { buildConfig true }
